@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using PInvoke;
 
@@ -65,6 +66,9 @@ namespace AnimatedIcon
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr GetModuleHandle(string lpModuleName);
 
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
+        public static extern int GetDeviceCaps(IntPtr hDC, int nIndex);
+
         #endregion
 
         public static IntPtr GetProcessHandle(IntPtr hWindow)
@@ -124,9 +128,35 @@ namespace AnimatedIcon
 			lParam = CastingHelper.CastToStruct<T>(buffer);
 
 			return true;
-		}
+        }
 
-		public static void Constants()
+        public static Size GetScreenSize()
+        {
+            var w = System.Windows.SystemParameters.FullPrimaryScreenWidth;
+            var h = System.Windows.SystemParameters.FullPrimaryScreenHeight;
+
+            return new Size((int)w, (int)h);
+        }
+
+        public static Size GetPhysicalScreenSize()
+        {
+            int Desktopvertres = 117;
+            int Desktophorzres = 118;
+
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                IntPtr desktop = g.GetHdc();
+
+                int physicalScreenHeight = GetDeviceCaps(desktop, Desktopvertres);
+                int physicalScreenWidth = GetDeviceCaps(desktop, Desktophorzres);
+
+                g.ReleaseHdc(desktop);
+
+                return new Size(physicalScreenWidth, physicalScreenHeight);
+            }
+        }
+
+        public static void Constants()
         {
 #pragma warning disable CS0219 //The variable '' is assigned but its value is never used
 

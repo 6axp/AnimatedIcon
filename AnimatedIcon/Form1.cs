@@ -15,7 +15,6 @@ using System.Diagnostics;
 using Gma;
 using Microsoft.Win32;
 
-
 namespace AnimatedIcon
 {
     public partial class Form1 : Form
@@ -23,10 +22,13 @@ namespace AnimatedIcon
         private Desktop desktop = new Desktop();
         private RecycleBin bin = new RecycleBin();
 
+        private Size screen = NativeMethods.GetPhysicalScreenSize();
+        private int maxDistance = 0;
         private Point mousePos = new Point();
         private Point binPos = new Point();
         private int mouseToBin = 0;
 
+        private int  openedRatio = 50;
         private int  openedDistance = 400;
         private bool isDragging = false;
         private bool isOpened = false;
@@ -36,7 +38,12 @@ namespace AnimatedIcon
 
         public Form1()
         {
+            this.maxDistance = (int)(new Rectangle(0, 0, screen.Width, screen.Height).GetDiagonal());
+
+            this.openedDistance = this.maxDistance * this.openedRatio / 100;
+
             InitializeComponent();
+            this.trackBar1.Value = openedRatio;
 
             this.desktop.StartDragging += Desktop_StartDrag;
 
@@ -77,7 +84,7 @@ namespace AnimatedIcon
 
         private void HandleIcon()
         {
-            var shouldBeOpened = this.isDragging && this.mouseToBin < this.openedDistance;
+            var shouldBeOpened = this.isDragging && (this.mouseToBin < this.openedDistance) && this.desktop.HitTest(Cursor.Position);
             if (this.isOpened != shouldBeOpened)
             {
                 this.bin.SetIcon(shouldBeOpened ? openedChest : closedChest);
@@ -88,10 +95,20 @@ namespace AnimatedIcon
         private void timer1_Tick(object sender, EventArgs e)
         {
             var str = string.Empty;
-            str += $"{mousePos.X} {mousePos.Y}\r\n";
-            str += $"{binPos.X} {binPos.Y}\r\n";
-            str += $"{this.mouseToBin}\r\n";
+            str += $"Screen: {screen.Width}x{screen.Height}\r\n";
+            str += $"Mouse: {mousePos.X} {mousePos.Y}\r\n";
+            str += $"Bin: {binPos.X} {binPos.Y}\r\n";
+            str += $"Max distance: {this.maxDistance}\r\n";
+            str += $"Distance: {this.mouseToBin}\r\n";
+            str += $"Open distance: {this.openedDistance}\r\n";
+            str += $"Sensivity: {this.openedRatio}\r\n";
             this.DebugText.Text = str;
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            this.openedRatio = this.trackBar1.Value;
+            this.openedDistance = this.maxDistance * this.openedRatio / 100;
         }
     }
 }
