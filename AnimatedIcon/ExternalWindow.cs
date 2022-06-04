@@ -74,13 +74,13 @@ namespace AnimatedIcon
 
         public bool WriteToMemory<T>(IntPtr address, T data) where T : struct
         {
-            return WriteToMemory(address, CastingHelper.CastToArray(data));
+            return WriteToMemory(address, CastingHelper.CastToBytes(data));
         }
 
         public IntPtr WriteToMemory<T>(T data) where T : struct
         {
             IntPtr address = AllocateMemory(Marshal.SizeOf(data));
-            WriteToMemory(address, CastingHelper.CastToArray(data));
+            WriteToMemory(address, CastingHelper.CastToBytes(data));
             return address; 
         }
 
@@ -108,7 +108,7 @@ namespace AnimatedIcon
 
             this.WriteToMemory(pMemory, lParam);
 
-			var buffer = CastingHelper.CastToArray<T>(lParam);
+			var buffer = CastingHelper.CastToBytes<T>(lParam);
 
 			int written;
 			var success = NativeMethods.WriteProcessMemory(this.ProcessHandle, pMemory, buffer, tSize, out written);

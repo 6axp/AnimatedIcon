@@ -59,7 +59,7 @@ namespace AnimatedIcon
 
         public FolderViewEvents(Shell32.IShellView view)
         {
-            var disp = view.GetItemObject(Shell32.SVGIO.SVGIO_BACKGROUND, Interop.Contants.IID_IDispatch);
+            var disp = view.GetItemObject(Shell32.SVGIO.SVGIO_BACKGROUND, Interop.Constants.IID_IDispatch);
             var dual = (Shell32.IShellFolderViewDual3)disp;
 
             this.events = new CoClassEvents(this);
@@ -77,16 +77,9 @@ namespace AnimatedIcon
     {
         private static readonly int HRESULT_ERROR_NOT_FOUND = unchecked((int)0x80070490);
 
-        public static void RefreshTrashCan()
+        public static void RefreshItem(Shell32.PIDL item)
         {
-            new Task(() =>
-            {
-                var bin = Vanara.Windows.Shell.RecycleBin.ShellFolderInstance;
-
-                Shell32.SHChangeNotify(Shell32.SHCNE.SHCNE_UPDATEITEM, Shell32.SHCNF.SHCNF_FLUSHNOWAIT, bin.PIDL, Shell32.PIDL.Null);
-
-            }).
-            Start();
+            Shell32.SHChangeNotify(Shell32.SHCNE.SHCNE_UPDATEITEM, Shell32.SHCNF.SHCNF_FLUSHNOWAIT, item, Shell32.PIDL.Null);
         }
 
         public static Shell32.IShellView3 GetDesktopView()
@@ -107,9 +100,7 @@ namespace AnimatedIcon
             IntPtr pBrowserUnknown;
             service.QueryService(Shell32.SID_STopLevelBrowser, IID_IShellBrowser, out pBrowserUnknown);
 
-
             var browser = (Shell32.IShellBrowser)Marshal.GetObjectForIUnknown(pBrowserUnknown);
-
 
             Shell32.IShellView view;
             browser.QueryActiveShellView(out view);
@@ -174,6 +165,32 @@ namespace AnimatedIcon
                 }
             }
             return false;
+        }
+
+        public HWND FindShellDefView()
+        {
+            var destop = User32.GetDesktopWindow();
+            var hWorkerW = HWND.NULL;
+            var hShellViewWin = HWND.NULL;
+            do
+            {
+                hWorkerW = User32.FindWindowEx(destop, hWorkerW, "WorkerW", null);
+                hShellViewWin = User32.FindWindowEx(hWorkerW, IntPtr.Zero, "SHELLDLL_DefView", null);
+            }
+            while (hShellViewWin == IntPtr.Zero && hWorkerW != IntPtr.Zero);
+
+            return hShellViewWin;
+        }
+
+        public HWND FindDesktopListView()
+        {
+            HWND list = HWND.NULL;
+            while (list.IsNull)
+            {
+                var _SHELLDLL_DefView = FindShellDefView();
+                list = User32.FindWindowEx(_SHELLDLL_DefView, IntPtr.Zero, "SysListView32", "FolderView");
+            }
+            return list;
         }
     }
 }

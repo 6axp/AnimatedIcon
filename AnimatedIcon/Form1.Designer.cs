@@ -46,7 +46,6 @@ namespace AnimatedIcon
             // timer1
             // 
             this.timer1.Interval = 20;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // btnRefresh
             // 
@@ -56,7 +55,6 @@ namespace AnimatedIcon
             this.btnRefresh.TabIndex = 1;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // Form1
             // 

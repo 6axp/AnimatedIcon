@@ -18,7 +18,7 @@ namespace AnimatedIcon
 			return result;
 		}
 
-		public static byte[] CastToArray<T>(T data) where T : struct
+		public static byte[] CastToBytes<T>(T data) where T : struct
 		{
 			var result = new byte[Marshal.SizeOf(typeof(T))];
 			var pResult = GCHandle.Alloc(result, GCHandleType.Pinned);
@@ -28,10 +28,10 @@ namespace AnimatedIcon
 		}
 	}
 
-	#region dll import
-
 	class NativeMethods
     {
+        #region dll import
+
         [DllImport("kernel32.dll")]
         public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, uint flAllocationType, uint flProtect);
 
@@ -65,7 +65,9 @@ namespace AnimatedIcon
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr GetModuleHandle(string lpModuleName);
 
-		public static IntPtr GetProcessHandle(IntPtr hWindow)
+        #endregion
+
+        public static IntPtr GetProcessHandle(IntPtr hWindow)
 		{
 			int ProcessId;
 			User32.GetWindowThreadProcessId(hWindow, out ProcessId);
@@ -105,7 +107,7 @@ namespace AnimatedIcon
 			if (pMemory == IntPtr.Zero)
 				return false;
 
-			var buffer = CastingHelper.CastToArray<T>(lParam);
+			var buffer = CastingHelper.CastToBytes<T>(lParam);
 
 			int written;
 			var success = WriteProcessMemory(process, pMemory, buffer, tSize, out written);
@@ -126,7 +128,9 @@ namespace AnimatedIcon
 
 		public static void Constants()
         {
-			uint LVM_FIRST = 4096;
+#pragma warning disable CS0219 //The variable '' is assigned but its value is never used
+
+            uint LVM_FIRST = 4096;
 			uint LVM_GETITEMCOUNT = LVM_FIRST + 4;
 			uint LVM_GETITEMRECT = 4110;
 			uint LVM_GETITEMW = 4171;
@@ -161,19 +165,143 @@ namespace AnimatedIcon
 
 			uint HDI_TEXT = 0x0002;
 			uint HDI_WIDTH = 0x0001;
-			/*
-#define HDI_HEIGHT              HDI_WIDTH
-#define HDI_TEXT                0x0002
-#define HDI_FORMAT              0x0004
-#define HDI_LPARAM              0x0008
-#define HDI_BITMAP              0x0010
-#define HDI_IMAGE               0x0020
-#define HDI_DI_SETITEM          0x0040
-#define HDI_ORDER               0x0080
-#define HDI_FILTER              0x0100
+            /*
+			#define HDI_HEIGHT              HDI_WIDTH
+			#define HDI_TEXT                0x0002
+			#define HDI_FORMAT              0x0004
+			#define HDI_LPARAM              0x0008
+			#define HDI_BITMAP              0x0010
+			#define HDI_IMAGE               0x0020
+			#define HDI_DI_SETITEM          0x0040
+			#define HDI_ORDER               0x0080
+			#define HDI_FILTER              0x0100
             */
-		}
-	}
 
-    #endregion
+#pragma warning restore CS0219
+        }
+    }
+
+	namespace WindowsStructs
+    {
+#pragma warning disable CS0649 // Field '' is never assigned to, and will always have its default value 0
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct LVITEM
+        {
+            public uint mask;
+            public int iItem;
+            public int iSubItem;
+            public uint state;
+            public uint stateMask;
+            public IntPtr pszText;
+            public int cchTextMax;
+            public int iImage;
+            public uint lParam;
+            public int iIndent;
+        };
+
+        struct LVTILEINFO
+        {
+            public uint cbSize;
+            public int iItem;
+            public uint cColumns;
+            public IntPtr puColumns;
+            public IntPtr piColFmt;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LVGROUP
+        {
+            public int cbSize;
+            public int mask;
+            public IntPtr pszHeader;
+            public uint cchHeader;
+            public IntPtr pszFooter;
+            public uint cchFooter;
+            public int iGroupId;
+            public int stateMask;
+            public int state;
+            public uint uAlign;
+            public IntPtr pszSubtitle;
+            public uint cchSubtitle;
+            public IntPtr pszTask;
+            public uint cchTask;
+            public IntPtr pszDescriptionTop;
+            public uint cchDescriptionTop;
+            public IntPtr pszDescriptionBottom;
+            public uint cchDescriptionBottom;
+            public int iTitleImage;
+            public int iExtendedImage;
+            public int iFirstItem;
+            public uint cItems;
+            public IntPtr pszSubsetTitle;
+            public uint cchSubsetTitle;
+        }
+
+        struct tagLVGROUP
+        {
+            public uint cbSize;
+            public uint mask;
+            public IntPtr pszHeader;
+            public int cchHeader;
+            public IntPtr pszFooter;
+            public int cchFooter;
+            public int iGroupId;
+            public uint stateMask;
+            public uint state;
+            public uint uAlign;
+            public IntPtr pszSubtitle;
+            public uint cchSubtitle;
+            public IntPtr pszTask;
+            public uint cchTask;
+            public IntPtr pszDescriptionTop;
+            public uint cchDescriptionTop;
+            public IntPtr pszDescriptionBottom;
+            public uint cchDescriptionBottom;
+            public int iTitleImage;
+            public int iExtendedImage;
+            public int iFirstItem;
+            public uint cItems;
+            public IntPtr pszSubsetTitle;
+            public uint cchSubsetTitle;
+        }
+
+        struct tagLVITEMA
+        {
+            public uint mask;
+            public int iItem;
+            public int iSubItem;
+            public uint state;
+            public uint stateMask;
+            public IntPtr pszText;
+            public int cchTextMax;
+            public int iImage;
+            public IntPtr lParam;
+            public int iIndent;
+            public int iGroupId;
+            public uint cColumns;
+            public IntPtr puColumns;
+            public IntPtr piColFmt;
+            public int iGroup;
+        }
+
+        struct HD_ITEMA
+        {
+            public uint mask;
+            public int cxy;
+            public IntPtr pszText;
+            public IntPtr hbm;
+            public int cchTextMax;
+            public int fmt;
+            public IntPtr lParam;
+            public int iImage;
+            public int iOrder;
+            public uint type;
+            public IntPtr pvFilter;
+            public uint state;
+        }
+
+#pragma warning restore CS0649
+
+    }
 }

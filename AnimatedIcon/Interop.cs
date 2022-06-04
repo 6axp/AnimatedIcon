@@ -5,7 +5,7 @@ namespace AnimatedIcon
 {
     namespace Interop
     {
-        public static class Contants
+        public static class Constants
         {
             public static readonly Guid IID_IDispatch = new Guid("00020400-0000-0000-C000-000000000046");
             public static readonly Guid IID_IDataObject = new Guid("0000010E-0000-0000-C000-000000000046");

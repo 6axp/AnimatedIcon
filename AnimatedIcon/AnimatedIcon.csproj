@@ -129,7 +129,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Desktop.cs" />
     <Compile Include="Interop.cs" />
+    <Compile Include="RecycleBin.cs" />
     <Compile Include="Shell.cs" />
     <Compile Include="ExternalWindow.cs" />
     <Compile Include="Form1.cs">
