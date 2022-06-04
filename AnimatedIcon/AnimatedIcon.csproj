@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Desktop.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Interop.cs" />
     <Compile Include="RecycleBin.cs" />
     <Compile Include="Shell.cs" />
