@@ -35,7 +35,13 @@ namespace AnimatedIcon
             this.btnRefresh = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.btnBrowse = new System.Windows.Forms.Button();
+            this.imgPreview = new System.Windows.Forms.PictureBox();
+            this.barPreview = new System.Windows.Forms.TrackBar();
+            this.lstPreviewImages = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgPreview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barPreview)).BeginInit();
             this.SuspendLayout();
             // 
             // DebugText
@@ -81,18 +87,63 @@ namespace AnimatedIcon
             this.trackBar1.Value = 50;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
+            // btnBrowse
+            // 
+            this.btnBrowse.Location = new System.Drawing.Point(484, 288);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(124, 50);
+            this.btnBrowse.TabIndex = 4;
+            this.btnBrowse.Text = "Browse";
+            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            // 
+            // imgPreview
+            // 
+            this.imgPreview.Location = new System.Drawing.Point(991, 163);
+            this.imgPreview.Name = "imgPreview";
+            this.imgPreview.Size = new System.Drawing.Size(64, 64);
+            this.imgPreview.TabIndex = 5;
+            this.imgPreview.TabStop = false;
+            // 
+            // barPreview
+            // 
+            this.barPreview.LargeChange = 10;
+            this.barPreview.Location = new System.Drawing.Point(684, 418);
+            this.barPreview.Maximum = 100;
+            this.barPreview.Name = "barPreview";
+            this.barPreview.Size = new System.Drawing.Size(269, 69);
+            this.barPreview.TabIndex = 6;
+            this.barPreview.Value = 50;
+            this.barPreview.Scroll += new System.EventHandler(this.barPreview_Scroll);
+            // 
+            // lstPreviewImages
+            // 
+            this.lstPreviewImages.FormattingEnabled = true;
+            this.lstPreviewImages.ItemHeight = 20;
+            this.lstPreviewImages.Location = new System.Drawing.Point(684, 163);
+            this.lstPreviewImages.Name = "lstPreviewImages";
+            this.lstPreviewImages.Size = new System.Drawing.Size(290, 224);
+            this.lstPreviewImages.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(804, 662);
+            this.ClientSize = new System.Drawing.Size(1360, 662);
+            this.Controls.Add(this.lstPreviewImages);
+            this.Controls.Add(this.barPreview);
+            this.Controls.Add(this.imgPreview);
+            this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.DebugText);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgPreview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barPreview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -105,6 +156,10 @@ namespace AnimatedIcon
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.PictureBox imgPreview;
+        private System.Windows.Forms.TrackBar barPreview;
+        private System.Windows.Forms.ListBox lstPreviewImages;
     }
 }
 

@@ -130,6 +130,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RegistryKey.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Desktop.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interop.cs" />
